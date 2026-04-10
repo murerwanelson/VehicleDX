@@ -31,7 +31,7 @@ pip install -r requirements.txt
 ## Model Files
 Place model files in the `models/` directory:
 - `models/mobilenetv2_finetuned_best.keras`
-- `models/densenet121_finetuned_best.keras` (if you want to use DenseNet121 option)
+- `models/densenet121_finetuned_best.keras` 
 
 If a selected model file is missing, the app shows a clear `Model file not found` message.
 
@@ -42,6 +42,7 @@ streamlit run app.py
 ```
 
 Then open the local URL shown in terminal (usually `http://localhost:8501`).
+it si hosted on `https://vehicledx-nellah.streamlit.app/`
 
 ## Usage
 1. Choose a model in the sidebar.
