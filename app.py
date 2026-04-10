@@ -627,7 +627,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True,
         )
         st.markdown('<div class="img-panel">', unsafe_allow_html=True)
-        st.image(raw_image, width="stretch")
+        st.image(raw_image, use_container_width=True)
         st.markdown(
             f"""
             <div class="img-meta">
@@ -664,7 +664,7 @@ if uploaded_file is not None:
         run_prediction = st.button(
             "🔍 &nbsp; Classify Damage",
             type="primary",
-            width="stretch",
+            use_container_width=True,
         )
 
         if run_prediction:
@@ -802,7 +802,7 @@ if uploaded_file is not None:
                 unsafe_allow_html=True,
             )
             fig = build_probability_chart(probs, pred_class)
-            st.pyplot(fig, width="stretch")
+            st.pyplot(fig, use_container_width=True)
             plt.close(fig)
 
         with bars_col:
@@ -844,7 +844,7 @@ if uploaded_file is not None:
                 "Label":    [SEVERITY_INTERPRETATION[lbl]["label"] for lbl in probs],
                 "Prob (%)": [f"{v * 100:.2f}" for v in probs.values()],
             })
-            st.dataframe(df, hide_index=True, width="stretch")
+            st.dataframe(df, hide_index=True, use_container_width=True)
 
         # ── Insurance interpretation panel ─────────────────────────────────
         # Rendered as a single HTML CSS-grid div (class="sev-cards-row") for
