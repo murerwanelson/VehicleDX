@@ -71,7 +71,7 @@ flowchart TD
 
 ## Inference Flowchart
 ```mermaid
-flowchart LR
+flowchart TD
     U[User Uploads Image] --> P1[Open Image]
     P1 --> P2[Convert to RGB]
     P2 --> P3[Resize to 190 by 190]
