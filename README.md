@@ -54,37 +54,37 @@ Then open the local URL shown in terminal (usually `http://localhost:8501`).
 flowchart TD
     A([Start]) --> B[Launch Streamlit App]
     B --> C[Select Model in Sidebar]
-    C --> D{Image Uploaded?}
-    D -- No --> E[Show Empty State / Prompt Upload]
+    C --> D{Image Uploaded}
+    D -- No --> E[Show Empty State and Prompt Upload]
     E --> D
-    D -- Yes --> F[Display Uploaded Image + Metadata]
-    F --> G{Classify Button Clicked?}
+    D -- Yes --> F[Display Uploaded Image and Metadata]
+    F --> G{Classify Button Clicked}
     G -- No --> H[Wait for User Action]
     H --> G
-    G -- Yes --> I[Load Selected .keras Model]
-    I --> J[Preprocess Image\nRGB -> Resize 190x190 -> Batch -> Normalize]
+    G -- Yes --> I[Load Selected Keras Model]
+    I --> J[Preprocess Image]
     J --> K[Run Inference]
-    K --> L[Get Predicted Class + Confidence + Probabilities]
-    L --> M[Render Results UI\nHero Card, Chart, Table, Severity Scale]
-    M --> N([End / Ready for New Input])
+    K --> L[Get Predicted Class and Confidence]
+    L --> M[Render Results UI]
+    M --> N([End or New Input])
 ```
 
 ## Inference Flowchart
 ```mermaid
 flowchart LR
-    U[User Uploads Image] --> P1[Image.open()]
+    U[User Uploads Image] --> P1[Open Image]
     P1 --> P2[Convert to RGB]
-    P2 --> P3[Resize to 190x190]
-    P3 --> P4[Convert to float32 ndarray]
+    P2 --> P3[Resize to 190 by 190]
+    P3 --> P4[Convert to float32 array]
     P4 --> P5[Add batch dimension]
-    P5 --> P6[Model-specific preprocess_input]
+    P5 --> P6[Apply model specific preprocessing]
     P6 --> M[Selected Keras Model]
     M --> O[Prediction Vector]
-    O --> A[argmax -> class index]
-    O --> C[max prob -> confidence]
-    A --> R[Severity Mapping\nClass 1..5]
+    O --> A[Find top class index]
+    O --> C[Find top confidence score]
+    A --> R[Map to Severity Class 1 to 5]
     C --> R
-    R --> V[Visual Output\nCards + Bars + Table + Chart]
+    R --> V[Render Cards Bars Table and Chart]
 ```
 
 ## GitHub and Large Model Files
