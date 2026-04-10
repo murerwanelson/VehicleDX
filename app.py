@@ -13,6 +13,7 @@
 #   models/densenet121_finetuned_best.keras
 # =============================================================================
 
+import io
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -20,7 +21,7 @@ import matplotlib
 matplotlib.use("Agg")  # non-interactive backend — must be set before pyplot import
 import matplotlib.pyplot as plt
 import streamlit as st
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 
 # ---------------------------------------------------------------------------
 # TensorFlow — deferred import so startup is fast and errors surface cleanly
@@ -601,10 +602,18 @@ if uploaded_file is not None:
 
     # ── Parse image ─────────────────────────────────────────────────────────
     try:
-        raw_image = Image.open(uploaded_file)
+        image_bytes = uploaded_file.getvalue()
+        raw_image = Image.open(io.BytesIO(image_bytes))
+        raw_image.load()  # Force full decode now to avoid lazy file-handle issues.
+    except UnidentifiedImageError:
+        st.error(
+            "❌ **Unsupported or corrupted image file.** Please upload a valid JPG, JPEG, or PNG image.",
+            icon="🔴",
+        )
+        st.stop()
     except Exception as exc:
         st.error(
-            f"❌ **Invalid image.** Could not open the uploaded file.\n\nDetails: `{exc}`",
+            f"❌ **Image upload failed.** Please try another image.\n\nDetails: `{exc}`",
             icon="🔴",
         )
         st.stop()
