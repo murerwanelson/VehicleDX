@@ -663,8 +663,15 @@ if uploaded_file is not None:
             with st.spinner(f"Loading {selected_model_name}…"):
                 try:
                     model = load_selected_model(cfg["path"])
-                except FileNotFoundError as exc:
-                    st.error(str(exc), icon="📁")
+                except FileNotFoundError:
+                    model_filename = Path(cfg["path"]).name
+                    st.error(
+                        f"❌ Model file missing: `{model_filename}`\n\n"
+                        "Add the model file to `models/` and try again.\n"
+                        "If you are on Streamlit Cloud, push the model file to GitHub "
+                        "(or add startup download logic), then reboot the app.",
+                        icon="📁",
+                    )
                     st.stop()
                 except Exception as exc:
                     st.error(f"❌ Model load failed: `{exc}`", icon="🔴")
