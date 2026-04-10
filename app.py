@@ -248,7 +248,7 @@ def load_selected_model(model_path: str):
             f"Model file not found: '{model_path}'\n"
             "Place the trained .keras file in the models/ directory."
         )
-    return load_model(model_path)
+    return load_model(model_path, compile=False)
 
 
 def preprocess_uploaded_image(image: Image.Image, model_name: str) -> np.ndarray:
@@ -349,7 +349,7 @@ def build_probability_chart(probabilities: dict, predicted_class: str) -> plt.Fi
     ax.set_facecolor(BG)
 
     bars = ax.barh(
-        [f"Class {lbl}  {SEVERITY_INTERPRETATION[lbl]['badge']}" for lbl in labels],
+        [f"Class {lbl}" for lbl in labels],
         values,
         color=colours,
         height=0.52,
@@ -467,9 +467,6 @@ with st.sidebar:
         f"""
         <div class="model-card">
             <div class="mc-name">{cfg['icon']} {selected_model_name}</div>
-            <div class="mc-meta">
-                📁 {cfg['path']}&nbsp;&nbsp;|&nbsp;&nbsp;~{cfg['params']} params
-            </div>
             <div class="mc-desc">{cfg['description']}</div>
         </div>
         """,
@@ -621,7 +618,7 @@ if uploaded_file is not None:
             unsafe_allow_html=True,
         )
         st.markdown('<div class="img-panel">', unsafe_allow_html=True)
-        st.image(raw_image, use_container_width=True)
+        st.image(raw_image, width="stretch")
         st.markdown(
             f"""
             <div class="img-meta">
@@ -650,10 +647,6 @@ if uploaded_file is not None:
                 <div style="font-size:1rem; font-weight:700; color:var(--text-primary);">
                     {cfg['icon']} &nbsp;{selected_model_name}
                 </div>
-                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:0.25rem;
-                            font-family:monospace;">
-                    {cfg['path']}
-                </div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -662,7 +655,7 @@ if uploaded_file is not None:
         run_prediction = st.button(
             "🔍 &nbsp; Classify Damage",
             type="primary",
-            use_container_width=True,
+            width="stretch",
         )
 
         if run_prediction:
@@ -793,7 +786,7 @@ if uploaded_file is not None:
                 unsafe_allow_html=True,
             )
             fig = build_probability_chart(probs, pred_class)
-            st.pyplot(fig, use_container_width=True)
+            st.pyplot(fig, width="stretch")
             plt.close(fig)
 
         with bars_col:
@@ -835,7 +828,7 @@ if uploaded_file is not None:
                 "Label":    [SEVERITY_INTERPRETATION[lbl]["label"] for lbl in probs],
                 "Prob (%)": [f"{v * 100:.2f}" for v in probs.values()],
             })
-            st.dataframe(df, hide_index=True, use_container_width=True)
+            st.dataframe(df, hide_index=True, width="stretch")
 
         # ── Insurance interpretation panel ─────────────────────────────────
         # Rendered as a single HTML CSS-grid div (class="sev-cards-row") for

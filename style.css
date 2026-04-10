@@ -262,7 +262,7 @@ button[title="Close sidebar"] {
    ───────────────────────────────────────────────────────────────────────────── */
 [data-testid="stFileUploader"] {
     border: 2px dashed var(--border-strong) !important;
-    border-radius: var(--radius-lg) !important;
+    border-radius: var(--radius-sm) !important;
     background: var(--bg-glass) !important;
     transition: border-color var(--transition) !important;
 }
@@ -1049,7 +1049,7 @@ hr {
 
     /* ── Upload zone ────────────────────────────── */
     [data-testid="stFileUploader"] {
-        border-radius: var(--radius-md) !important;
+        border-radius: var(--radius-sm) !important;
     }
 
     /* ── Footer ─────────────────────────────────── */
