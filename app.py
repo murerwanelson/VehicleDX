@@ -23,6 +23,13 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from PIL import Image, UnidentifiedImageError
 
+# Optional HEIC/HEIF support for mobile uploads (especially iPhone photos).
+try:
+    from pillow_heif import register_heif_opener
+    register_heif_opener()
+except ImportError:
+    pass
+
 # ---------------------------------------------------------------------------
 # TensorFlow — deferred import so startup is fast and errors surface cleanly
 # ---------------------------------------------------------------------------
@@ -585,8 +592,8 @@ st.markdown(
 
 uploaded_file = st.file_uploader(
     label="Drag & drop or click to browse",
-    type=["jpg", "jpeg", "png"],
-    help="Supported formats: JPG, JPEG, PNG. Use clear, well-lit photographs.",
+    type=["jpg", "jpeg", "png", "heic", "heif", "webp"],
+    help="Supported formats: JPG, JPEG, PNG, HEIC, HEIF, WEBP. Use clear, well-lit photographs.",
 )
 
 camera_file = st.camera_input(
@@ -613,7 +620,7 @@ if selected_image_file is not None:
         raw_image.load()  # Force full decode now to avoid lazy file-handle issues.
     except UnidentifiedImageError:
         st.error(
-            "❌ **Unsupported or corrupted image file.** Please upload a valid JPG/JPEG/PNG image or use camera capture.",
+            "❌ **Unsupported image format.** Please upload JPG, JPEG, PNG, HEIC, HEIF, or WEBP. If this still fails on mobile, use camera capture.",
             icon="🔴",
         )
         st.stop()

@@ -4,3 +4,4 @@ Pillow==10.4.0
 numpy==1.26.4
 pandas==2.2.2
 matplotlib==3.8.4
+pillow-heif==0.16.0
