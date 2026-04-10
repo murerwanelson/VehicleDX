@@ -1,0 +1,1241 @@
+/* =============================================================================
+   VehicleDX — Application Stylesheet
+   Vehicle Damage Classification for Insurance Claim Assessment
+   University Thesis Proof of Concept
+   =============================================================================
+   Sections
+   --------
+   1.  Design Tokens (CSS custom properties)
+   2.  Base & Typography
+   3.  Hero Header
+   4.  Glass Stat Cards
+   5.  Section Labels
+   6.  Upload Zone
+   7.  Classify Button
+   8.  Result Hero Card
+   9.  Confidence Gauge Row
+   10. Severity Class Cards
+   11. Image Panel
+   12. Empty State (placeholder)
+   13. Sidebar
+   14. Table Overrides
+   15. Alert Overrides
+   16. Footer
+   17. Divider
+   18. Responsive (media queries)
+       ├── ≤ 1024 px  small laptop / large tablet
+       ├── ≤  768 px  tablet / large phone
+       └── ≤  480 px  mobile phone
+   ============================================================================= */
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. DESIGN TOKENS
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+    /* Backgrounds */
+    --bg-base:        #0d1117;
+    --bg-surface:     #161b22;
+    --bg-elevated:    #1c2333;
+    --bg-glass:       rgba(255, 255, 255, 0.04);
+
+    /* Borders */
+    --border:         rgba(255, 255, 255, 0.07);
+    --border-strong:  rgba(255, 255, 255, 0.14);
+
+    /* Text */
+    --text-primary:   #e2e8f0;
+    --text-secondary: #8899aa;
+    --text-muted:     #5a6a7a;
+
+    /* Accent colours */
+    --accent-blue:    #3b82f6;
+    --accent-cyan:    #06b6d4;
+    --accent-violet:  #8b5cf6;
+
+    /* Border radii */
+    --radius-sm:      8px;
+    --radius-md:      12px;
+    --radius-lg:      18px;
+    --radius-xl:      24px;
+
+    /* Misc */
+    --shadow-card:    0 4px 24px rgba(0, 0, 0, 0.4);
+    --transition:     0.22s ease;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. BASE & TYPOGRAPHY
+   ───────────────────────────────────────────────────────────────────────────── */
+html,
+body,
+[class*="css"],
+.stApp {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    background-color: var(--bg-base) !important;
+    color: var(--text-primary);
+}
+
+/* Hide Streamlit chrome, but keep the header mounted so the sidebar toggle works */
+#MainMenu,
+footer,
+[data-testid="stDecoration"] {
+    display: none !important;
+}
+
+header,
+[data-testid="stHeader"] {
+    visibility: visible !important;
+    background: transparent !important;
+}
+
+[data-testid="stHeader"] {
+    z-index: 99990 !important;
+}
+
+[data-testid="stSidebarCollapseButton"],
+[data-testid="collapsedControl"],
+[data-testid="stCollapsedControl"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Streamlit version fallback selectors for sidebar toggle */
+button[aria-label="Open sidebar"],
+button[aria-label="Close sidebar"],
+button[title="Open sidebar"],
+button[title="Close sidebar"] {
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 99999 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 1280px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. HERO HEADER
+   ───────────────────────────────────────────────────────────────────────────── */
+.hero-wrapper {
+    text-align: center;
+    padding: 3.2rem 2rem 2.4rem;
+    background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.10)  0%,
+        rgba(139, 92, 246, 0.08) 50%,
+        rgba(6, 182, 212, 0.08)  100%
+    );
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-xl);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Radial glow overlay */
+.hero-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse 70% 50% at 50% 0%,
+        rgba(59, 130, 246, 0.12) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    color: #93c5fd;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 1.2rem;
+}
+
+.hero-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #e2e8f0 0%, #93c5fd 50%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 0.6rem;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 0 0 0.8rem;
+    letter-spacing: 0.01em;
+}
+
+.hero-description {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. GLASS STAT CARDS
+   ───────────────────────────────────────────────────────────────────────────── */
+.stat-card {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.4rem;
+    text-align: center;
+    transition: border-color var(--transition), transform var(--transition);
+    backdrop-filter: blur(10px);
+}
+
+.stat-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+}
+
+.stat-card .stat-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+}
+
+.stat-card .stat-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. SECTION LABELS
+   ───────────────────────────────────────────────────────────────────────────── */
+.section-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Decorative line that extends after the label text */
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. UPLOAD ZONE
+   ───────────────────────────────────────────────────────────────────────────── */
+[data-testid="stFileUploader"] {
+    border: 2px dashed var(--border-strong) !important;
+    border-radius: var(--radius-lg) !important;
+    background: var(--bg-glass) !important;
+    transition: border-color var(--transition) !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   7. CLASSIFY BUTTON
+   ───────────────────────────────────────────────────────────────────────────── */
+[data-testid="stButton"] > button[kind="primary"] {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%) !important;
+    border: none !important;
+    border-radius: var(--radius-md) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.02em !important;
+    padding: 0.65rem 1.4rem !important;
+    transition:
+        opacity var(--transition),
+        transform var(--transition),
+        box-shadow var(--transition) !important;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-testid="stButton"] > button[kind="primary"]:hover {
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 22px rgba(59, 130, 246, 0.5) !important;
+}
+
+[data-testid="stButton"] > button[kind="primary"]:active {
+    transform: translateY(0) !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   8. RESULT HERO CARD
+   ───────────────────────────────────────────────────────────────────────────── */
+.result-hero {
+    border-radius: var(--radius-lg);
+    padding: 1.8rem 2rem;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Dark frosted glass overlay — severity colour applied via inline style */
+.result-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+}
+
+.result-hero-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.result-class-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 0.7rem;
+}
+
+.result-class-name {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin: 0 0 0.4rem;
+}
+
+.result-description {
+    font-size: 0.9rem;
+    color: rgba(226, 232, 240, 0.75);
+    line-height: 1.6;
+    max-width: 560px;
+    margin: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   9. CONFIDENCE GAUGE ROW  (animated CSS progress bars)
+   ───────────────────────────────────────────────────────────────────────────── */
+.confidence-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.conf-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 60px;
+}
+
+.conf-bar-bg {
+    flex: 1;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.conf-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.conf-pct {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 44px;
+    text-align: right;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   10. SEVERITY CLASS CARDS
+   ───────────────────────────────────────────────────────────────────────────── */
+.sev-card {
+    border-radius: var(--radius-md);
+    padding: 1rem 0.85rem;
+    text-align: center;
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: default;
+    height: 100%;
+}
+
+.sev-card:hover {
+    transform: translateY(-4px);
+}
+
+.sev-card .sev-badge {
+    font-size: 1.6rem;
+}
+
+.sev-card .sev-class {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0.5rem 0 0.2rem;
+}
+
+.sev-card .sev-name {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sev-card .sev-cost {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+    font-family: 'SFMono-Regular', monospace;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   11. IMAGE PANEL
+   ───────────────────────────────────────────────────────────────────────────── */
+.img-panel {
+    background: var(--bg-glass);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    backdrop-filter: blur(10px);
+}
+
+.img-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.6rem;
+    font-family: 'SFMono-Regular', monospace;
+    letter-spacing: 0.02em;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   12. EMPTY STATE (placeholder shown before any image is uploaded)
+   ───────────────────────────────────────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-xl);
+    background: var(--bg-glass);
+    margin-top: 1rem;
+}
+
+.empty-state .es-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0 0 0.6rem;
+}
+
+.empty-state p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   13. SIDEBAR
+   ───────────────────────────────────────────────────────────────────────────── */
+[data-testid="stSidebar"] {
+    background: var(--bg-surface) !important;
+    border-right: 1px solid var(--border) !important;
+}
+
+[data-testid="stSidebar"] .section-label {
+    color: var(--text-muted);
+}
+
+/* ── Brand mark ── */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.2rem 0 1.2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.2rem;
+}
+
+.sidebar-brand .brand-icon {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.sidebar-brand .brand-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+    line-height: 1.15;
+}
+
+.sidebar-brand .brand-tagline {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+/* ── Model info card ── */
+.model-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-top: 0.6rem;
+}
+
+.model-card .mc-name {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+}
+
+.model-card .mc-meta {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'SFMono-Regular', monospace;
+    margin-bottom: 0.5rem;
+}
+
+.model-card .mc-desc {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+
+/* ── Numbered usage steps ── */
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0.75rem;
+}
+
+.step-num {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    background: rgba(59, 130, 246, 0.18);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #93c5fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-top: 2px;
+}
+
+/* ── Academic disclaimer badge ── */
+.academic-badge {
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    margin-top: 0.5rem;
+}
+
+.academic-badge .ab-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #c4b5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.35rem;
+}
+
+.academic-badge .ab-text {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   14. TABLE OVERRIDES
+   ───────────────────────────────────────────────────────────────────────────── */
+[data-testid="stDataFrame"] {
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   15. ALERT OVERRIDES
+   ───────────────────────────────────────────────────────────────────────────── */
+.stAlert {
+    border-radius: var(--radius-md) !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   16. FOOTER
+   ───────────────────────────────────────────────────────────────────────────── */
+.app-footer {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1.4rem 0 0.5rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+}
+
+.app-footer a {
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.app-footer a:hover {
+    color: var(--text-primary);
+}
+
+.app-footer .footer-divider {
+    color: var(--border-strong);
+    margin: 0 6px;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   17. DIVIDER
+   ───────────────────────────────────────────────────────────────────────────── */
+hr {
+    border: none !important;
+    border-top: 1px solid var(--border) !important;
+    margin: 1.6rem 0 !important;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   17a. NAV TOGGLE BUTTON  (CSS-only Native Sidebar Override)
+   ─────────────────────────────────────────────────────────────────────────────
+   This section overrides the native Streamlit sidebar toggle buttons to
+   apply our custom glassmorphism design. By styling the native elements
+   rather than creating new ones, we bypass all iframe sandbox and React
+   state issues. The button is the "real" button, it just looks premium.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ── Container Reset ── */
+/* Streamlit positions these buttons in the top-left; we make the containers
+   absolute/fixed so our buttons stays in the exact same spot regardless of state */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="collapsedControl"],
+[data-testid="stCollapsedControl"] {
+    position: fixed !important;
+    top: 14px !important;
+    left: 14px !important;
+    z-index: 99999 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ── The Actual Button ── */
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="collapsedControl"] button,
+[data-testid="stCollapsedControl"] button {
+    width: 42px !important;
+    height: 42px !important;
+    background: rgba(22, 27, 34, 0.88) !important;
+    border: 1px solid var(--border-strong) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-primary) !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    
+    transition: 
+        background var(--transition), 
+        border-color var(--transition), 
+        box-shadow var(--transition), 
+        transform var(--transition) !important;
+    
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45) !important;
+    cursor: pointer !important;
+}
+
+/* ── Hover / Active ── */
+[data-testid="stSidebarCollapseButton"] button:hover,
+[data-testid="collapsedControl"] button:hover,
+[data-testid="stCollapsedControl"] button:hover {
+    background: rgba(59, 130, 246, 0.18) !important;
+    border-color: rgba(59, 130, 246, 0.45) !important;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.28) !important;
+    transform: scale(1.03) !important;
+}
+
+[data-testid="stSidebarCollapseButton"] button:active,
+[data-testid="collapsedControl"] button:active,
+[data-testid="stCollapsedControl"] button:active {
+    transform: scale(0.96) !important;
+}
+
+/* ── Hide the Native Arrow SVG ── */
+[data-testid="stSidebarCollapseButton"] button svg,
+[data-testid="collapsedControl"] button svg,
+[data-testid="stCollapsedControl"] button svg {
+    display: none !important;
+}
+
+/* ── Replace with Custom Icon (☰ / ✕) ── */
+/* When sidebar is COLLAPSED (button to open) -> Show Hamburger ☰ */
+[data-testid="collapsedControl"] button::before,
+[data-testid="stCollapsedControl"] button::before {
+    content: "☰" !important;
+    font-size: 1.2rem !important;
+    font-weight: 300 !important;
+}
+
+/* When sidebar is EXPANDED (button to close) -> Show X ✕ */
+[data-testid="stSidebarCollapseButton"] button::before {
+    content: "\00d7" !important; /* Multiplication sign for a clean X */
+    font-size: 1.5rem !important;
+    font-weight: 300 !important;
+    margin-top: -2px;
+}
+
+/* ── Responsive: Small Mobile ── */
+@media screen and (max-width: 480px) {
+    [data-testid="stSidebarCollapseButton"],
+    [data-testid="collapsedControl"],
+    [data-testid="stCollapsedControl"] {
+        top: 10px !important;
+        left: 10px !important;
+    }
+    
+    [data-testid="stSidebarCollapseButton"] button,
+    [data-testid="collapsedControl"] button,
+    [data-testid="stCollapsedControl"] button {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 1.1rem !important;
+    }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   17b. CSS GRID CONTAINERS
+   ─────────────────────────────────────────────────────────────────────────────
+   Stat cards and severity cards are rendered as pure HTML CSS grids so that
+   responsive media queries in section 18 can reflow them freely.
+   Streamlit st.columns() produces inline flex rows that resist media-query
+   overrides; pure HTML grids have no such limitation.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Four equal-width stat cards on desktop */
+.stat-cards-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Five equal-width severity class cards on desktop */
+.sev-cards-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   18. RESPONSIVE  —  mobile-first progressive enhancement
+   ─────────────────────────────────────────────────────────────────────────────
+   Breakpoints
+   ───────────
+   ≤ 1024 px  small laptop / large tablet  (landscape iPad, surface go, etc.)
+   ≤  768 px  tablet / large phone         (portrait iPad, large Android)
+   ≤  480 px  mobile phone                 (iPhone, small Android)
+
+   Streamlit column internals
+   ──────────────────────────
+   Streamlit renders st.columns() as a flex row inside
+   [data-testid="stHorizontalBlock"].  Each column is
+   [data-testid="column"].  Forcing flex-direction:column
+   on the container and width:100% on the children stacks them cleanly.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+
+/* ══════════════════════════════════════════════════
+   BREAKPOINT 1 — ≤ 1024 px  (small laptops, tablets in landscape)
+   ══════════════════════════════════════════════════ */
+@media screen and (max-width: 1024px) {
+
+    /* Looser horizontal padding on the main canvas */
+    .block-container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+
+    /* Slightly shrink hero vertical breathing room */
+    .hero-wrapper {
+        padding: 2.4rem 1.6rem 2rem;
+        margin-bottom: 1.4rem;
+    }
+
+    /* Tighten result hero */
+    .result-hero {
+        padding: 1.4rem 1.6rem;
+    }
+
+    /* Stat cards — allow text to wrap gracefully */
+    .stat-card .stat-value {
+        font-size: 1.15rem;
+    }
+
+    /* Severity card text scale-down */
+    .sev-card .sev-badge {
+        font-size: 1.3rem;
+    }
+
+    /* Confidence bar label narrowing */
+    .conf-label {
+        min-width: 50px;
+        font-size: 0.75rem;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════
+   BREAKPOINT 2 — ≤ 768 px  (tablets, large phones)
+   ══════════════════════════════════════════════════ */
+@media screen and (max-width: 768px) {
+
+    /* ── Layout canvas ─────────────────────────── */
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1.2rem !important;
+    }
+
+    /* ── Stack ALL Streamlit column groups ─────── */
+    /*
+       Targets every horizontal flex row Streamlit creates for st.columns().
+       Each [data-testid="column"] child then becomes full-width.
+    */
+    [data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+
+    [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: none !important;
+    }
+
+    /* ── Hero header ────────────────────────────── */
+    .hero-wrapper {
+        padding: 2rem 1.2rem 1.6rem;
+        border-radius: var(--radius-lg);
+        margin-bottom: 1rem;
+    }
+
+    .hero-badge {
+        font-size: 0.65rem;
+        padding: 4px 10px;
+        margin-bottom: 0.9rem;
+    }
+
+    /* hero-title uses clamp(), already responsive — no override needed */
+
+    .hero-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .hero-description {
+        font-size: 0.82rem;
+    }
+
+    /* ── Stat cards ─────────────────────────────── */
+    /*
+       After columns are stacked, the 4 stat cards each occupy full width.
+       Display them in a 2 × 2 CSS grid so they stay compact side-by-side.
+    */
+    .stat-cards-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 0.75rem !important;
+    }
+
+    .stat-card {
+        padding: 0.9rem 1rem;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.65rem;
+    }
+
+    /* ── Image panel ────────────────────────────── */
+    .img-panel {
+        border-radius: var(--radius-md);
+        padding: 0.75rem;
+    }
+
+    .img-meta {
+        font-size: 0.68rem;
+        word-break: break-word;
+    }
+
+    /* ── Result hero card ───────────────────────── */
+    .result-hero {
+        padding: 1.2rem 1.2rem;
+        border-radius: var(--radius-md);
+    }
+
+    .result-class-name {
+        font-size: 1.25rem;
+    }
+
+    .result-description {
+        font-size: 0.82rem;
+    }
+
+    /* Inline stat row inside result hero — stack vertically */
+    .result-hero-inner > div[style*="display:flex"] {
+        flex-direction: column !important;
+        gap: 0.9rem !important;
+    }
+
+    /* ── Severity class cards ───────────────────── */
+    /*
+       5 columns get stacked by the column rule above.
+       Wrap them into a 2-column CSS grid kept compact.
+    */
+    .sev-cards-row {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.6rem !important;
+    }
+
+    .sev-card {
+        padding: 0.8rem 0.6rem;
+    }
+
+    .sev-card .sev-badge {
+        font-size: 1.2rem;
+    }
+
+    .sev-card .sev-class {
+        font-size: 0.68rem;
+    }
+
+    .sev-card .sev-name {
+        font-size: 0.65rem;
+    }
+
+    .sev-card .sev-cost {
+        font-size: 0.6rem;
+    }
+
+    /* ── Confidence bars ────────────────────────── */
+    .confidence-row {
+        gap: 7px;
+    }
+
+    .conf-label {
+        min-width: 46px;
+        font-size: 0.72rem;
+    }
+
+    .conf-bar-bg {
+        height: 8px;
+    }
+
+    .conf-pct {
+        min-width: 38px;
+        font-size: 0.72rem;
+    }
+
+    /* ── Empty state ────────────────────────────── */
+    .empty-state {
+        padding: 3.5rem 1.2rem;
+        border-radius: var(--radius-lg);
+    }
+
+    .empty-state .es-icon {
+        font-size: 3rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.05rem;
+    }
+
+    .empty-state p {
+        font-size: 0.8rem;
+    }
+
+    /* ── Primary button — bigger tap target ─────── */
+    [data-testid="stButton"] > button[kind="primary"] {
+        font-size: 0.88rem !important;
+        padding: 0.7rem 1.2rem !important;
+        width: 100% !important;
+    }
+
+    /* ── Upload zone ────────────────────────────── */
+    [data-testid="stFileUploader"] {
+        border-radius: var(--radius-md) !important;
+    }
+
+    /* ── Footer ─────────────────────────────────── */
+    .app-footer {
+        font-size: 0.68rem;
+        margin-top: 2rem;
+        line-height: 2;         /* extra breathing room when lines wrap */
+    }
+
+    /* ── Section labels ─────────────────────────── */
+    .section-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════
+   BREAKPOINT 3 — ≤ 480 px  (mobile phones)
+   ══════════════════════════════════════════════════ */
+@media screen and (max-width: 480px) {
+
+    /* ── Layout canvas ─────────────────────────── */
+    .block-container {
+        padding-left: 0.7rem !important;
+        padding-right: 0.7rem !important;
+        padding-top: 0.9rem !important;
+    }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero-wrapper {
+        padding: 1.6rem 1rem 1.3rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-badge {
+        display: none;          /* hide decorative badge on very small screens */
+    }
+
+    .hero-subtitle {
+        font-size: 0.82rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-description {
+        font-size: 0.78rem;
+        line-height: 1.6;
+    }
+
+    /* ── Stat cards — single column on phones ────── */
+    .stat-cards-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        padding: 0.8rem 0.9rem;
+        text-align: left;       /* left-align feels more natural at single-col */
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+
+    .stat-card .stat-value {
+        font-size: 0.95rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.62rem;
+    }
+
+    /* ── Result hero ─────────────────────────────── */
+    .result-hero {
+        padding: 1rem;
+    }
+
+    .result-class-name {
+        font-size: 1.1rem;
+    }
+
+    .result-description {
+        font-size: 0.78rem;
+    }
+
+    /* ── Severity cards — 1 column on phone ─────── */
+    .sev-cards-row {
+        grid-template-columns: 1fr !important;
+    }
+
+    .sev-card {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        text-align: left;
+        padding: 0.75rem 0.9rem;
+    }
+
+    .sev-card .sev-badge {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .sev-card .sev-class {
+        margin: 0 0 0.1rem;
+        font-size: 0.7rem;
+    }
+
+    .sev-card .sev-name {
+        font-size: 0.67rem;
+    }
+
+    .sev-card .sev-cost {
+        font-size: 0.62rem;
+        margin-top: 1px;
+    }
+
+    /* ── Image panel ────────────────────────────── */
+    .img-panel {
+        padding: 0.5rem;
+        border-radius: var(--radius-sm);
+    }
+
+    /* ── Model selection info box ───────────────── */
+    .model-card {
+        padding: 0.8rem;
+    }
+
+    .model-card .mc-meta {
+        word-break: break-all;   /* long file paths wrap instead of overflow */
+    }
+
+    /* ── Confidence bars ────────────────────────── */
+    .conf-label {
+        min-width: 40px;
+        font-size: 0.68rem;
+    }
+
+    .conf-bar-bg {
+        height: 7px;
+    }
+
+    .conf-pct {
+        min-width: 34px;
+        font-size: 0.68rem;
+    }
+
+    /* ── Empty state ────────────────────────────── */
+    .empty-state {
+        padding: 2.5rem 1rem;
+        border-radius: var(--radius-md);
+    }
+
+    .empty-state .es-icon {
+        font-size: 2.5rem;
+    }
+
+    .empty-state h3 {
+        font-size: 0.95rem;
+    }
+
+    .empty-state p {
+        font-size: 0.75rem;
+    }
+
+    /* ── Footer — simplify on very small screens ── */
+    .app-footer .footer-divider {
+        display: none;           /* hide separators; text flows naturally */
+    }
+
+    .app-footer {
+        font-size: 0.65rem;
+        line-height: 1.9;
+    }
+
+    /* ── Section labels ─────────────────────────── */
+    .section-label {
+        font-size: 0.6rem;
+    }
+
+    /* ── Sidebar brand tagline — hide on phone ──── */
+    .sidebar-brand .brand-tagline {
+        display: none;
+    }
+
+    /* ── Bigger minimum touch targets for buttons ── */
+    [data-testid="stButton"] > button {
+        min-height: 44px !important;   /* WCAG 2.5.5 touch-target guideline */
+    }
+}
