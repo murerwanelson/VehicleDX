@@ -16,7 +16,7 @@ VehicleDX/
   requirements.txt
   models/
     mobilenetv2_finetuned_best.keras
-    densenet121_finetuned_best.keras   # optional unless you want both models
+    densenet121_finetuned_best.keras   
 ```
 
 ## Requirements
