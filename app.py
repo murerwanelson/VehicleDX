@@ -215,12 +215,12 @@ def clear_prediction_state() -> None:
 
 def build_result_signature(
     model_name: str,
-    uploaded_file,
+    image_file,
 ) -> tuple[str, str | None, int | None]:
-    """Create a small signature for the active model and uploaded image."""
-    if uploaded_file is None:
+    """Create a small signature for the active model and selected image input."""
+    if image_file is None:
         return model_name, None, None
-    return model_name, uploaded_file.name, uploaded_file.size
+    return model_name, getattr(image_file, "name", "camera_capture"), getattr(image_file, "size", None)
 
 
 @st.cache_resource(show_spinner=False)
@@ -589,7 +589,13 @@ uploaded_file = st.file_uploader(
     help="Supported formats: JPG, JPEG, PNG. Use clear, well-lit photographs.",
 )
 
-current_signature = build_result_signature(selected_model_name, uploaded_file)
+camera_file = st.camera_input(
+    "Or take a photo (recommended on mobile if file upload fails)",
+)
+
+selected_image_file = uploaded_file if uploaded_file is not None else camera_file
+
+current_signature = build_result_signature(selected_model_name, selected_image_file)
 if st.session_state.get("result_signature") != current_signature:
     clear_prediction_state()
 
@@ -598,16 +604,16 @@ if st.session_state.get("result_signature") != current_signature:
 # INFERENCE PIPELINE
 # =============================================================================
 
-if uploaded_file is not None:
+if selected_image_file is not None:
 
     # ── Parse image ─────────────────────────────────────────────────────────
     try:
-        image_bytes = uploaded_file.getvalue()
+        image_bytes = selected_image_file.getvalue()
         raw_image = Image.open(io.BytesIO(image_bytes))
         raw_image.load()  # Force full decode now to avoid lazy file-handle issues.
     except UnidentifiedImageError:
         st.error(
-            "❌ **Unsupported or corrupted image file.** Please upload a valid JPG, JPEG, or PNG image.",
+            "❌ **Unsupported or corrupted image file.** Please upload a valid JPG/JPEG/PNG image or use camera capture.",
             icon="🔴",
         )
         st.stop()
@@ -623,7 +629,7 @@ if uploaded_file is not None:
 
     with col_img:
         st.markdown(
-            '<p class="section-label">② &nbsp; Uploaded Photo</p>',
+            '<p class="section-label">② &nbsp; Selected Photo</p>',
             unsafe_allow_html=True,
         )
         st.markdown('<div class="img-panel">', unsafe_allow_html=True)
