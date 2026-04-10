@@ -502,7 +502,7 @@ with st.sidebar:
         <div class="academic-badge">
             <div class="ab-title">🎓 Academic Proof of Concept</div>
             <div class="ab-text">
-                Built for university thesis purposes only.
+                Built for University of Zimbabwe thesis purposes only.
                 Predictions are <strong>not legally binding</strong> and do
                 not replace a professional vehicle inspection or adjuster review.
             </div>
@@ -906,7 +906,7 @@ st.markdown(
         <span class="footer-divider">·</span>
         Vehicle Damage Classification for Motor Insurance Claim Assessment
         <span class="footer-divider">·</span>
-        University Thesis Proof of Concept
+        Developed by Murerwa Nelson Tararama · University of Zimbabwe Thesis
         <br>
         Models: MobileNetV2 &amp; DenseNet121 (fine-tuned)
         <span class="footer-divider">·</span>
